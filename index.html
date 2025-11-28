@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SandhyaVandanam - Yajur Veda Apastamba Sutram </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Devanagari-friendly fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&family=Noto+Sans&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #111827;
+      --accent: #eab308;
+      --accent-soft: rgba(234, 179, 8, 0.12);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2933;
+    }
+
+    * { box-sizing: border-box; }
+
+	body {
+	  margin: 0;
+	  min-height: 100vh;
+	  background: url('background_template.jpg') no-repeat center center fixed;
+	  background-size: 100% 100%;
+	  background-repeat: no-repeat !important;
+      background-position: top left !important;
+	  background-color: #000;
+	  font-family: 'Inter', sans-serif;
+	  display: flex;
+	  justify-content: center;
+	  align-items: flex-start;
+	  padding: 16px;
+	}
+
+
+    .app {
+      width: 100%;
+      max-width: 1000px;
+	  min-height: 95vh;   /* or 95vh if you want even bigger */
+	  background: rgba(5, 10, 25, 0.82);
+      border-radius: 20px;
+      border: 1px solid rgba(148,163,184,0.55);
+      box-shadow:
+        0 25px 50px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(15,23,42,0.9);
+      padding: 18px 16px 10px;
+      backdrop-filter: blur(18px);
+      color: var(--text-main);
+      margin-top: 0px; /* pull up into background header on large screens */
+    }
+
+    @media (min-width: 640px) {
+      .app { padding: 22px 24px 10px; }
+    }
+
+    .app-header { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+
+    .title-row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+
+    .app-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(15,118,110,0.22);
+      border: 1px solid rgba(45,212,191,0.55);
+      color: #a5f3fc;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .subtitle { font-size:0.85rem; color:var(--text-muted); }
+
+    .controls-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:12px;
+    }
+
+    .select-group { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:0.8rem; color:var(--text-muted); }
+
+    select {
+      background:#020617;
+      border-radius:999px;
+      border:1px solid var(--border-subtle);
+      color:var(--text-main);
+      padding:6px 12px;
+      font-size:0.82rem;
+      outline:none;
+    }
+
+    .progress { font-size:0.78rem; color:var(--text-muted); }
+    .progress strong { color:var(--text-main); }
+
+    .card-shell { perspective:1200px; margin-bottom:180px; }
+
+    .card {
+      position:relative;
+      width:100%;
+      min-height:600px; /* smaller default */
+      background: radial-gradient(circle at top, #111827, #020617);
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,0.55);
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.95),
+        0 0 0 1px rgba(15,23,42,0.9);
+      padding:16px 14px;
+      transform-style:preserve-3d;
+      transition:transform 0.4s ease, box-shadow 0.3s ease;
+      cursor:pointer;
+	  border: none !important;
+	  box-shadow: none !important;
+	  background: transparent !important;
+    }
+
+    @media (min-width:640px) {
+      .card { padding:18px; min-height:600px; }
+    }
+
+    .card.flipped { transform:rotateY(180deg); }
+
+    .card-face {
+      position:absolute;
+      inset:0;
+      padding:inherit;
+      backface-visibility:hidden;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+	  padding-top: 0
+    }
+
+    .card-back { transform:rotateY(180deg); }
+
+    .card-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      font-size:0.78rem;
+      color:var(--text-muted);
+      text-transform:uppercase;
+      letter-spacing:0.09em;
+    }
+
+    .pill {
+      padding:2px 8px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      border:1px solid rgba(234,179,8,0.6);
+      color:var(--accent);
+      font-weight:500;
+      font-size:0.72rem;
+    }
+
+    .sanskrit {
+      font-family:"Noto Sans Devanagari","Noto Sans",system-ui,sans-serif;
+      font-size:1.05rem;
+      line-height:1.8;
+      color:#f9fafb;
+      text-align:center;
+      padding:8px 10px;
+      border-radius:12px;
+      background: radial-gradient(circle at top, rgba(15,23,42,0.9), rgba(15,23,42,0.4));
+      border:1px solid rgba(148,163,184,0.35);
+      white-space:pre-wrap;
+    }
+
+    .hint {
+      font-size:0.8rem;
+      color:var(--accent);
+      background:var(--accent-soft);
+      padding:6px 8px;
+      border-radius:10px;
+    }
+
+    .section-title {
+      font-size:0.8rem;
+      color:var(--text-muted);
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+    }
+
+    .translation { font-size:0.85rem; line-height:1.5; }
+
+    .word-by-word {
+      font-size:0.8rem;
+      line-height:1.45;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px dashed var(--border-subtle);
+      background:rgba(15,23,42,0.9);
+      max-height:150px;
+      overflow-y:auto;
+    }
+
+    .word-by-word b { color:#e5e7eb; }
+
+    .card-footer-note {
+      font-size:0.75rem;
+      color:var(--text-muted);
+      margin-top:auto;
+      text-align:right;
+    }
+
+	  .controls-main {
+	  display:flex;
+	  gap:10px;
+	  justify-content:space-between;
+	  align-items:center;
+	  flex-wrap:wrap;
+	  margin-top: 250px;   /* ⬅ pushes buttons below the image */
+	  margin-bottom: 8px;
+	}
+
+
+    .btn {
+      border-radius:999px;
+      border:1px solid var(--border-subtle);
+      background:rgba(15,23,42,0.95);
+      color:var(--text-main);
+      padding:7px 14px;
+      font-size:0.8rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      text-transform:uppercase;
+      letter-spacing:0.1em;
+    }
+
+    .btn.primary {
+      border-color:rgba(234,179,8,0.8);
+      background: radial-gradient(circle at top, #facc15, #ca8a04);
+      color:#111827;
+      font-weight:600;
+      box-shadow:
+        0 12px 25px rgba(250,204,21,0.35),
+        0 0 0 1px rgba(0,0,0,0.7);
+    }
+
+    .btn:active { transform:translateY(1px); }
+
+    .tip { margin-top:4px; font-size:0.72rem; color:var(--text-muted); }
+    .tip b { color:var(--accent); }
+
+    .empty-state {
+      padding:20px;
+      text-align:center;
+      border-radius:14px;
+      background:rgba(15,23,42,0.85);
+      border:1px dashed var(--border-subtle);
+      font-size:0.86rem;
+    }
+
+    /* Audio section */
+    .audio-section {
+      margin-top:20px;
+      padding-top:8px;
+      border-top:1px solid rgba(148,163,184,0.3);
+    }
+
+    .audio-title {
+      font-size:0.8rem;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+      color:var(--text-muted);
+      margin-bottom:4px;
+    }
+
+    .audio-player { margin-bottom:6px; }
+
+    .audio-tracks {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+
+    .track-btn {
+      border-radius:999px;
+      border:1px solid var(--border-subtle);
+      background:#020617;
+      color:var(--text-main);
+      padding:4px 8px;
+      font-size:0.75rem;
+      cursor:pointer;
+    }
+
+    .track-btn.active {
+      border-color:rgba(234,179,8,0.9);
+      background:var(--accent-soft);
+      color:var(--accent);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top:6px;
+      font-size:0.75rem;
+      color:var(--text-muted);
+      text-align:center;
+    }
+
+	/* Front + back images: keep size fixed even if the window grows */
+	.sanskrit img,
+	.translation img {
+	  display: block;
+	  width: auto;                             /* don't stretch to 100% of card */
+	  max-width: min(100%, 900px);             /* cap size at ~900px */
+	  max-height: 65vh;                        /* also cap by viewport height */
+	  height: auto;
+	  margin: 0 auto;                          /* center in the card */
+	  border-radius: 12px;
+	}
+
+
+
+
+    /* ========= MOBILE LAYOUT TWEAKS ========= */
+    @media (max-width: 640px) {
+      body {
+        display: block;               /* no flex centering */
+        padding: 8px 0 12px;
+      }
+
+      .app {
+        margin: 0 8px 12px;
+        max-width: 100%;
+        border-radius: 14px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+        padding: 12px 10px 8px;
+        margin-top: 0;               /* remove negative lift on mobile */
+      }
+
+      .controls-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .sanskrit {
+        font-size: 0.95rem;
+        padding: 6px 8px;
+      }
+
+      .hint {
+        font-size: 0.75rem;
+        padding: 5px 7px;
+      }
+
+      .card {
+        min-height: auto;           /* grow only as needed */
+        padding: 12px 10px;
+		border: none
+		box-shadow:none
+		background:transparent
+      }
+
+      .audio-section {
+        margin-top: 12px;
+        padding-top: 8px;
+      }
+	
+	  .sanskrit img {
+		width: 100%;
+		max-width: 100%;
+		max-height: 240px;
+	  }
+	  
+	  /* BACK */
+	  .translation img {
+		width: 100%;
+		max-width: 100%;
+		max-height: 240px;   /* SAME as front */
+		margin: 10px auto;
+	  }
+
+
+	  .card {
+		min-height: 260px;   /* keep enough height for the image */
+	  }
+
+	  .audio-section {
+		margin-top: 20px;    /* keeps the audio bar nicely below the image */
+		padding-top: 10px;
+	  }
+	}
+
+	.card-header {
+	display: none !important;
+	}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="title-row">
+        <div class="app-title">
+          <span>SandhyaVandanam Flash Cards</span>
+          <span class="tag">Multi-Chapter</span>
+        </div>
+      </div>
+      <div class="subtitle">
+        Choose a chapter, listen to the podcast and learn with me - Eeshwar :).
+      </div>
+    </header>
+
+    <section class="controls-row">
+      <div class="select-group">
+        <span>Chapter:</span>
+        <select id="chapterSelect"></select>
+      </div>
+
+      <div class="select-group">
+        <span>Deck:</span>
+        <select id="deckFilter">
+          <option value="all">All</option>
+          <option value="verse">Verses</option>
+          <option value="quiz">Knowledge Test</option>
+          <option value="vocab">Vocabulary</option>
+        </select>
+      </div>
+
+      <div class="progress" id="progressDisplay"></div>
+    </section>
+
+    <section class="card-shell">
+      <div class="card" id="card">
+        <!-- FRONT -->
+        <div class="card-face card-front">
+          <div class="card-header">
+            <span id="cardLabelFront"></span>
+            <span class="pill" id="cardTypePill">VERSE</span>
+          </div>
+          <div class="sanskrit" id="sanskritText"></div>
+          <div class="hint" id="hintText" style="display:none;"></div>
+          <div class="card-footer-note" id="frontFooter">
+            Tap card. 
+          </div>
+        </div>
+
+        <!-- BACK -->
+        <div class="card-face card-back">
+          <div class="card-header">
+            <span id="cardLabelBack"></span>
+            <span class="pill" id="cardTypePillBack">VERSE</span>
+          </div>
+
+          <div>
+            <div class="section-title">English Meaning</div>
+            <div class="translation" id="translationText"></div>
+          </div>
+
+          <div>
+            <div class="section-title">Word-by-word / Notes</div>
+            <div class="word-by-word" id="wordByWordText"></div>
+          </div>
+
+          <div class="card-footer-note">
+            <!-- Speak the Sanskrit once before moving to the next card 😊 -->
+          </div>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state" style="display:none;">
+        No cards for this chapter/deck yet. Add more cards into <b>data.js</b>.
+      </div>
+    </section>
+
+    <section class="controls-main">
+      <button class="btn" id="prevBtn">⬅ PREV</button>
+      <button class="btn primary" id="flipBtn">⟲ FLIP CARD</button>
+      <button class="btn" id="nextBtn">NEXT ➜</button>
+    </section>
+
+    <!-- Audio section -->
+    <section class="audio-section">
+      <div class="audio-title">Chapter Podcast</div>
+      <div class="audio-player">
+        <audio id="audioPlayer" controls style="width:100%;">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+      <div class="audio-tracks" id="audioTracks">
+        <!-- Track buttons injected by JS -->
+      </div>
+    </section>
+
+    <div class="tip">
+      <!-- Tip: On your phone, open this in the browser and choose <b>“Add to Home Screen”</b> to use it like an app. -->
+    </div>
+
+    <!-- Contact footer -->
+    <div class="footer">
+      contact (c) esbalabhakti@gmail.com
+    </div>
+  </div>
+
+  <!-- Load chapter/card/audio data -->
+  <script src="data.js"></script>
+
+  <script>
+    // ============ STATE ============
+    let currentChapter = null;
+    let currentCards = [];
+    let filteredCards = [];
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    // Elements
+    const chapterSelectEl = document.getElementById("chapterSelect");
+    const deckFilterEl = document.getElementById("deckFilter");
+    const progressDisplayEl = document.getElementById("progressDisplay");
+    const emptyStateEl = document.getElementById("emptyState");
+    const cardEl = document.getElementById("card");
+
+    const sanskritTextEl = document.getElementById("sanskritText");
+    const hintTextEl = document.getElementById("hintText");
+    const translationTextEl = document.getElementById("translationText");
+    const wordByWordTextEl = document.getElementById("wordByWordText");
+
+    const cardLabelFrontEl = document.getElementById("cardLabelFront");
+    const cardLabelBackEl = document.getElementById("cardLabelBack");
+    const cardTypePillFrontEl = document.getElementById("cardTypePill");
+    const cardTypePillBackEl = document.getElementById("cardTypePillBack");
+    const frontFooterEl = document.getElementById("frontFooter");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const flipBtn = document.getElementById("flipBtn");
+
+    const audioPlayer = document.getElementById("audioPlayer");
+    const audioTracksEl = document.getElementById("audioTracks");
+
+    // ============ INIT ============
+    function initChapters() {
+      chapters.forEach((ch) => {
+        const opt = document.createElement("option");
+        opt.value = ch.id;
+        opt.textContent = ch.title;
+        chapterSelectEl.appendChild(opt);
+      });
+
+      if (chapters.length > 0) {
+        setChapter(chapters[0].id);
+      }
+    }
+
+    function setChapter(chapterId) {
+      currentChapter = chapters.find(ch => ch.id === chapterId);
+      if (!currentChapter) return;
+
+      currentCards = currentChapter.cards || [];
+      isFlipped = false;
+      cardEl.classList.remove("flipped");
+      deckFilterEl.value = "all";
+
+      setupAudioForChapter(currentChapter);
+      applyFilter();
+    }
+
+    function setupAudioForChapter(chapter) {
+      audioTracksEl.innerHTML = "";
+      const audioList = chapter.audio || [];
+
+      if (audioList.length === 0) {
+        audioPlayer.src = "";
+        audioPlayer.style.display = "none";
+        audioTracksEl.innerHTML = "<span style='font-size:0.8rem; color:var(--text-muted);'>No audio uploaded for this chapter yet.</span>";
+        return;
+      }
+
+      audioPlayer.style.display = "block";
+
+      audioList.forEach((track, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "track-btn";
+        btn.textContent = (idx + 1) + ". " + track.label;
+        btn.addEventListener("click", () => {
+          playTrack(chapter, idx);
+        });
+        audioTracksEl.appendChild(btn);
+      });
+
+      // auto-select first track
+      playTrack(chapter, 0);
+    }
+
+    function playTrack(chapter, index) {
+      const audioList = chapter.audio || [];
+      if (!audioList[index]) return;
+
+      audioPlayer.src = audioList[index].file;
+      audioPlayer.play().catch(() => {});
+
+      Array.from(audioTracksEl.children).forEach((btn, i) => {
+        if (i === index) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+    }
+
+    // ============ CARDS ============
+    function applyFilter() {
+      const filter = deckFilterEl.value;
+      if (!currentCards || currentCards.length === 0) {
+        filteredCards = [];
+      } else if (filter === "all") {
+        filteredCards = currentCards;
+      } else {
+        filteredCards = currentCards.filter(c => c.type === filter);
+      }
+
+      if (filteredCards.length === 0) {
+        cardEl.style.display = "none";
+        emptyStateEl.style.display = "block";
+        progressDisplayEl.textContent = "";
+        return;
+      }
+
+      cardEl.style.display = "block";
+      emptyStateEl.style.display = "none";
+      currentIndex = 0;
+      isFlipped = false;
+      cardEl.classList.remove("flipped");
+      renderCard();
+    }
+
+    function renderCard() {
+      if (filteredCards.length === 0) return;
+
+      const card = filteredCards[currentIndex];
+      const isVerse = card.type === "verse";
+      const isQuiz = card.type === "quiz";
+      const isVocab = card.type === "vocab";
+
+      let label = "";
+      if (isVerse && card.verseNumber != null) {
+        label = `${currentChapter.title} – Verse ${card.verseNumber}`;
+      } else if (isQuiz) {
+        label = `${currentChapter.title} – Quiz`;
+      } else if (isVocab) {
+        label = `${currentChapter.title} – Vocabulary`;
+      } else {
+        label = currentChapter.title;
+      }
+
+      cardLabelFrontEl.textContent = label;
+      cardLabelBackEl.textContent = label;
+
+      const pillText = isVerse ? "VERSE" : isQuiz ? "QUIZ" : "VOCAB";
+      cardTypePillFrontEl.textContent = pillText;
+      cardTypePillBackEl.textContent = pillText;
+
+      // FRONT CONTENT: allow HTML + images; also convert "\n" to <br>
+      sanskritTextEl.innerHTML = (card.sanskrit || "").replace(/\n/g, "<br>");
+
+      if (card.hint && card.hint.trim().length > 0) {
+        hintTextEl.style.display = "block";
+        hintTextEl.textContent = "Hint: " + card.hint;
+      } else {
+        hintTextEl.style.display = "none";
+      }
+
+      if (isVocab) {
+        frontFooterEl.textContent = "Try to recall the meaning, then flip to check.";
+      } else if (isQuiz) {
+        frontFooterEl.textContent = "Answer in your mind, then flip to see the solution.";
+      } else {
+        frontFooterEl.textContent = "";
+      }
+
+      // BACK CONTENT: allow HTML + images; also convert "\n" to <br>
+      translationTextEl.innerHTML = (card.translation || "").replace(/\n/g, "<br>");
+      if (card.wordByWord && card.wordByWord.trim().length > 0) {
+        wordByWordTextEl.innerHTML = card.wordByWord;
+      } else {
+        wordByWordTextEl.innerHTML = "<i>No extra notes for this card.</i>";
+      }
+
+      const total = filteredCards.length;
+      const pos = currentIndex + 1;
+      progressDisplayEl.innerHTML = `<strong>${pos}</strong> / ${total}`;
+    }
+
+    function showNext() {
+      if (filteredCards.length === 0) return;
+      currentIndex = (currentIndex + 1) % filteredCards.length;
+      isFlipped = false;
+      cardEl.classList.remove("flipped");
+      renderCard();
+    }
+
+    function showPrev() {
+      if (filteredCards.length === 0) return;
+      currentIndex = (currentIndex - 1 + filteredCards.length) % filteredCards.length;
+      isFlipped = false;
+      cardEl.classList.remove("flipped");
+      renderCard();
+    }
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      if (isFlipped) cardEl.classList.add("flipped");
+      else cardEl.classList.remove("flipped");
+    }
+
+    // ============ EVENTS ============
+    chapterSelectEl.addEventListener("change", () => {
+      setChapter(chapterSelectEl.value);
+    });
+
+    deckFilterEl.addEventListener("change", applyFilter);
+    nextBtn.addEventListener("click", showNext);
+    prevBtn.addEventListener("click", showPrev);
+    flipBtn.addEventListener("click", flipCard);
+    cardEl.addEventListener("click", flipCard);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") showNext();
+      if (e.key === "ArrowLeft") showPrev();
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        flipCard();
+      }
+    });
+
+    initChapters();
+  </script>
+</body>
+</html>
