@@ -405,6 +405,36 @@
 	display: none !important;
 	}
   </style>
+
+  <!-- 🔐 SIMPLE PASSWORD GATE -->
+  <script>
+    const ACCESS_PASSWORD = "eeshwar"; // ← change this to whatever you like
+
+    window.addEventListener("load", function () {
+      // hide content until password OK
+      document.body.style.display = "none";
+
+      let granted = false;
+      while (!granted) {
+        const input = prompt("Enter password to access this page:");
+        if (input === null) {
+          // user cancelled – show message and stop
+          document.body.style.display = "";
+          document.body.innerHTML =
+            "<div style='min-height:100vh;display:flex;align-items:center;justify-content:center;background:#020617;color:#e5e7eb;font-family:sans-serif;text-align:center;padding:40px;'>Access cancelled. Reload the page if you want to try again.</div>";
+          return;
+        }
+        if (input === ACCESS_PASSWORD) {
+          granted = true;
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
+      }
+
+      // password accepted – reveal page
+      document.body.style.display = "";
+    });
+  </script>
 </head>
 <body>
   <div class="app">
